@@ -1,10 +1,21 @@
 import configparser
+import azure
 
-config = configparser.ConfigParser()
 
-#filename = input("please Give a Azure or GCP conf file name: ")
-filename = "azure01.conf"
+# Read the config files
+azureConfig = configparser.ConfigParser()
+gcpConfig = configparser.ConfigParser()
 
-config.read(filename)
-aws_access_key_id = config['default']['aws_access_key_id']
-aws_secret_access_key = config['default']['aws_secret_access_key']
+azureConf = "azure.conf"
+gcpConf = "gcp.conf"
+
+azureConfig.read(azureConf)
+gcpConfig.read(gcpConf)
+
+#aws_access_key_id = config['default']['aws_access_key_id']
+
+
+# Azure
+azureVMs = []
+azureVMs.append(azureConf['azure01'])
+azureVMs.append(azureConf['azure02'])
