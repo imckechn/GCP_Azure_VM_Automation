@@ -1,12 +1,15 @@
 import os
 
-def buildVMs(vmNum, config):
+def gcpBuildVMs(vmNum, config):
     data = [vmNum]
 
     try:
         name = config['name']
         image = config['image']
         imageProject = config['imageproject']
+
+        if imageProject == 'debian-cloud':
+            imageProject = 'debian'
         zone = config['zone']
 
         data.append(config['project'])
@@ -14,8 +17,12 @@ def buildVMs(vmNum, config):
         data.append(config['purpose'])
         data.append(config['os'])
 
-
-        ans = os.system()
+        os.system("gcloud compute instances create " + name +
+                        " --machine-type " + image +
+                        " --image-family " + imageProject +
+                        "--image-project " + imageProject +
+                        " --zone " + zone
+        )
 
         return data
 

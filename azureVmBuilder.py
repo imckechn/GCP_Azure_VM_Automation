@@ -1,7 +1,7 @@
 # Import the needed credential and management objects from the libraries.
 import os
 
-def buildVMs(vmNum, config):
+def azureBuildVMs(vmNum, config):
     data = [vmNum]
 
     try:
