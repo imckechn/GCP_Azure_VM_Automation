@@ -9,7 +9,6 @@ import subprocess
 #CONSTANTS
 PROJECT_ID = 'cis4010a3-380020'
 
-
 # Read the config files
 azureConfig = configparser.ConfigParser()
 gcpConfig = configparser.ConfigParser()
@@ -63,7 +62,7 @@ if awsExists:
                 azureVMs.append(ans)
 
         except Exception as e:
-            print("Found ", i - 1, " VMs")
+            print("Found ", i - 1, " Azure VMs")
             break
 
     #Now check for a tenth VM since it's naming convention changes
@@ -100,7 +99,7 @@ if gcpExists:
                 gcpVMs.append(ans)
 
         except Exception as e:
-            print("Found ", i - 1, " VMs")
+            print("Found ", i - 1, " GCP VMs")
             break
 
 
@@ -119,3 +118,8 @@ f.write("VM #, Purpose, OS, Team\n")
 for elem in gcpVMs:
     print("elem: ", elem)
     f.write(json.dumps(elem) + "\n")
+
+
+#Rename the .conf files
+# os.rename('confFiles/azure.conf', 'confFiles/azure' + str(datetime.datetime.now()) + '.conf')
+# os.rename('confFiles/gcp.conf', 'confFiles/gcp' + str(datetime.datetime.now()) + '.conf')
