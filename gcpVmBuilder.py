@@ -1,7 +1,5 @@
 import datetime
-import os
-import subprocess
-from subprocess import PIPE, run
+∂import subprocess
 
 def gcpBuildVMs(vmNum, config):
     data = [vmNum]
@@ -37,7 +35,7 @@ def gcpBuildVMs(vmNum, config):
             print("Created GCP VM #", vmNum)
 
         #Get the time the VM finished being created at
-        data.append(datetime.datetime.now())
+        data.append(str(datetime.datetime.now()))
 
         return data
 

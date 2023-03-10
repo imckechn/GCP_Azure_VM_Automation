@@ -3,6 +3,8 @@ import datetime
 import json
 from azureVmBuilder import *
 from gcpVmBuilder import *
+import os
+import subprocess
 
 #CONSTANTS
 PROJECT_ID = 'cis4010a3-380020'
@@ -26,60 +28,58 @@ if os.path.isfile(gcpConf):
     gcpConfig.read(gcpConf)
 
 # Azure
-print("---Now runing Azure---\n\n")
+print("---Creating the Azure VMs---\n")
 
 azureVMs = []
-# if awsExists:
-#     #Get the resource grous
-#     # print("Running 'az group create --name images --location canadacentral' to create a resource group on Azure")
-#     # os.system("az group create --name images --location canadacentral")
+if awsExists:
 
-#     resourceGroups = []
-#     for i in range(1, 11):
-#         try:
-#             if i < 10:
-#                 group = azureConfig['azure0' + str(i)]['resource-group']
-#             else:
-#                 group = azureConfig['azure' + str(i)]['resource-group']
+    #Get the resource grous
+    resourceGroups = []
+    for i in range(1, 11):
+        try:
+            if i < 10:
+                group = azureConfig['azure0' + str(i)]['resource-group']
+            else:
+                group = azureConfig['azure' + str(i)]['resource-group']
 
-#             if group not in resourceGroups:
-#                 resourceGroups.append(group)
-#                 os.system("az group create --name " + group + " --location canadacentral")
+            if group not in resourceGroups:
+                resourceGroups.append(group)
+                print("Creating group " + group)
+                subprocess.run("az group create --name " + group + " --location canadacentral",capture_output=True, shell=True, text=True)
 
-#         except Exception as e:
-#             break
+        except Exception as e:
+            break
 
-#     #Now create the VMS
-#     for i in range(1, 10):
-#         try:
-#             confData = azureConfig['azure0' + str(i)]
-#             ans = azureBuildVMs(i, confData)
+    #Now create the VMS
+    for i in range(1, 10):
+        try:
+            confData = azureConfig['azure0' + str(i)]
+            ans = azureBuildVMs(i, confData)
 
-#             if not ans:
-#                 print("Error building VM #", i)
-#                 break
-#             else:
-#                 azureVMs.append(ans)
+            if not ans:
+                print("Error building VM #", i)
+                break
+            else:
+                azureVMs.append(ans)
 
-#         except Exception as e:
-#             print("Found ", i - 1, " VMs")
-#             break
+        except Exception as e:
+            print("Found ", i - 1, " VMs")
+            break
 
-#     #Now check for a tenth VM since it's naming convention changes
-#     try:
-#         ans = azureBuildVMs(azureConfig['azure10'])
-#         azureVMs.append(ans)
-#     except:
-#         pass
+    #Now check for a tenth VM since it's naming convention changes
+    try:
+        ans = azureBuildVMs(azureConfig['azure10'])
+        azureVMs.append(ans)
+    except:
+        pass
 
-# print("Azure VMs: ", azureVMs)
 
 # GCP
-print("\n\n---Now runing GCP---\n\n")
+print("\n\n---Now creating the GCP VMs---\n")
 
 #Set the project id
 print("Running'gcloud config set project " + PROJECT_ID + "' to create a GCP project")
-os.system("gcloud config set project " + PROJECT_ID)
+subprocess.run("gcloud config set project " + PROJECT_ID, capture_output=True, shell=True, text=True)
 
 gcpVMs = []
 if gcpExists:
@@ -103,16 +103,19 @@ if gcpExists:
             print("Found ", i - 1, " VMs")
             break
 
-print("GCP VMs: ", gcpVMs)
-
 
 # Updating the VMcreation file
 print("\n\n---Creating/Updating the VMcreation file---\n\n")
 time = datetime.datetime.now()
 f = open("VMcreations/VMcreation_" + str(time) + ".txt", "w")
 
-f.write("Azure VMs:")
-f.write("VM #, Purpose, OS, Team")
+f.write("Azure VMs:\n")
+f.write("VM #, Purpose, OS, Team\n")
 for elem in azureVMs:
-    f.write(json.stringify(elem[0]))
+    f.write(json.dumps(elem) + "\n")
 
+f.write("GCP VMs:\n")
+f.write("VM #, Purpose, OS, Team\n")
+for elem in gcpVMs:
+    print("elem: ", elem)
+    f.write(json.dumps(elem) + "\n")
