@@ -1,32 +1,33 @@
 import datetime
-∂import subprocess
+import subprocess
+
+keys = ["project", "team", "purpose", "os"]
+gcpKeyOptions = ["accelerator", "type", "boot-disk-device-name", "boot-disk-provisioned-iops", "boot-disk-size",
+        "create-disk", "description", "disk", "boot", "device-name", "mode", "name", "scope", "hostname", "ipv6-network-tier",
+        "ipv6-public-ptr-domain", "labels", "local-ssd", "interface", "machine-type", "maintenance-policy", "metadata", "metadata-from-file",
+        "min-cpu-platform", "min-node-cpu", "network", "network-interface", "network-tier", "private-ipv6-google-access-type",
+        "private-network-ip", "resource-policies", "shielded-integrity-monitoring", "source-instance-template", "stack-type", "subnet", "tags",
+        "threads-per-core", "zone", "address", "boot-disk-kms-key", "boot-disk-kms-keyring", "boot-disk-mks-location", "boot-disk-kms-project",
+        "custom-cpu", "custom-memory", "custom-extensions", "custom-vm-type", "image-family-scope", "image-project", "image", "image-family",
+        "source-snapshot", "node", "node-affinity-file", "node-group", "public-ptr-domain", "reservation", "reservation-affinity", "default",
+        "scopes", "service-account"]
 
 def gcpBuildVMs(vmNum, config):
     data = [vmNum]
 
-    try:
-        name = config['name']
-        image = config['image']
-        imageProject = config['imageproject']
-        zone = config['zone']
+    gcpElements = ""
+    for key, value in config.items():
+        if key not in keys and key in gcpKeyOptions:
+            gcpElements += " --" + key + " " + value
 
+    try:
         data.append(config['project'])
         data.append(config['team'])
         data.append(config['purpose'])
         data.append(config['os'])
 
-        print("Running 'gcloud compute instances create " + name.lower() +
-                        " --image=" + image +
-                        " --image-project=" + imageProject +
-                        " --zone=" + zone +
-                        "' to create a GCP VM"
-        )
-        ans = subprocess.run("gcloud compute instances create " + name.lower() +
-                        " --image=" + image +
-                        " --image-project=" + imageProject +
-                        " --zone=" + zone,
-                        capture_output=True, shell=True, text=True
-        )
+        print("Running 'gcloud compute instances create" + gcpElements)
+        ans = subprocess.run("Running 'gcloud compute instances create" + gcpElements, capture_output=True, shell=True, text=True)
 
         if 'stderr="ERROR' in str(ans):
             print("GCP VM #", vmNum, " is bad")
