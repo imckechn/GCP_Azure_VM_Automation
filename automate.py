@@ -19,11 +19,11 @@ awsExists = False
 gcpExists = False
 
 if os.path.isfile(azureConf):
-    awsExists = True
+    awsExists = False
     azureConfig.read(azureConf)
 
 if os.path.isfile(gcpConf):
-    gcpExists = True
+    gcpExists = False
     gcpConfig.read(gcpConf)
 
 # Azure
@@ -50,10 +50,14 @@ if awsExists:
             break
 
     #Now create the VMS
-    for i in range(1, 10):
+    for i in range(1, 11):
         try:
-            confData = azureConfig['azure0' + str(i)]
-            ans = azureBuildVMs(i, confData)
+            if i < 10:
+                confData = azureConfig['azure0' + str(i)]
+                ans = azureBuildVMs(i, confData)
+            else:
+                confData = azureConfig['azure' + str(i)]
+                ans = azureBuildVMs(i, confData)
 
             if not ans:
                 print("Error building VM #", i)
@@ -122,3 +126,11 @@ for elem in gcpVMs:
 #Rename the .conf files
 # os.rename('confFiles/azure.conf', 'confFiles/azure' + str(datetime.datetime.now()) + '.conf')
 # os.rename('confFiles/gcp.conf', 'confFiles/gcp' + str(datetime.datetime.now()) + '.conf')
+
+ans = input("Do you want to open any ports for Azure(y/n)? ")
+if ans == 'y':
+    azureOpenPorts()
+
+# ans = input("Do you want to open any ports for GCP(y/n)? ")
+# if ans == 'y':
+#     gcpOpenPorts()

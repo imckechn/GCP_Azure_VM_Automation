@@ -1,6 +1,7 @@
 # Import the needed credential and management objects from the libraries.
 import datetime
 import subprocess
+import os
 
 keys = ['purpose', 'os', 'team']
 
@@ -48,3 +49,24 @@ def azureBuildVMs(vmNum, config):
     except Exception as e:
         print("Azure VM #", vmNum, " is bad")
         return False
+
+def azureOpenPorts():
+    portNum = 0
+    while(True):
+        requestedPort = input("Enter the port number you want to open ")
+        if requestedPort.isdigit():
+            portNum = int(requestedPort)
+            break
+
+    print("You're current resource groups:")
+    os.system("az group list -otable")
+
+
+    resourceGroup = input("Enter the resource group you want to open the port in ")
+    vmName = input("For which VM do you want to open the port ")
+
+    #Open the port
+    print("Running '" + "az vm open-port --port " + str(portNum)  + " --resource-group " + str(resourceGroup) + "' to open the port")
+    ans = subprocess.run("az vm open-port --port " + str(portNum) + " --resource-group " + str(resourceGroup) + " --name " + str(vmName), capture_output=True, shell=True, text=True)
+
+    print("ans", ans)
