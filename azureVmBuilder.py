@@ -16,8 +16,18 @@ def azureBuildVMs(vmNum, config):
         data.append(config['purpose'])
         data.append(config['os'])
         data.append(config['team'])
+        print("Running 'az group create --name " + resourceGroup + " --location " + location + "' to create a resource group")
+        os.system("az group create --name " + resourceGroup + " --location " + location)
 
-
+        print("Running 'az vm create" +
+                        " --resource-group " + resourceGroup +
+                        " --name " + name +
+                        " --image " + image +
+                        " --location " + location +
+                        " --admin-username " + adminUsername +
+                        " --generate-ssh-keys" +
+                        "' to create an Azure VM"
+        )
         ans = os.system("az vm create" +
                         " --resource-group " + resourceGroup +
                         " --name " + name +

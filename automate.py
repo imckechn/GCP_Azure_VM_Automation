@@ -16,23 +16,29 @@ awsExists = False
 gcpExists = False
 
 if os.path.isfile(azureConf):
-    #awsExists = True
+    awsExists = True
     azureConfig.read(azureConf)
 
 if os.path.isfile(gcpConf):
     gcpExists = True
     gcpConfig.read(gcpConf)
 
-#aws_access_key_id = config['default']['aws_access_key_id']
+# Azure
+print("---Now runing Azure---\n\n")
 
+# azureVMs = []
 # if awsExists:
 #     #Get the resource grous
-#     os.system("az group create --name images --location canadacentral")
+#     # print("Running 'az group create --name images --location canadacentral' to create a resource group on Azure")
+#     # os.system("az group create --name images --location canadacentral")
 
 #     resourceGroups = []
-#     for i in range(1, 10):
+#     for i in range(1, 11):
 #         try:
-#             group = azureConfig['azure0' + str(i)]['resource-group']
+#             if i < 10:
+#                 group = azureConfig['azure0' + str(i)]['resource-group']
+#             else:
+#                 group = azureConfig['azure' + str(i)]['resource-group']
 
 #             if group not in resourceGroups:
 #                 resourceGroups.append(group)
@@ -41,19 +47,7 @@ if os.path.isfile(gcpConf):
 #         except Exception as e:
 #             break
 
-#     #Now check for a tenth VM since it's naming convention changes
-#     try:
-#         group = azureConfig['azure0' + str(i)]['resource-group']
-
-#         if group not in resourceGroups:
-#             resourceGroups.append(group)
-#             os.system("az group create --name " + group + " --location canadacentral")
-#     except:
-#         pass
-
-
 #     #Now create the VMS
-#     awsVMs = []
 #     for i in range(1, 10):
 #         try:
 #             confData = azureConfig['azure0' + str(i)]
@@ -63,7 +57,7 @@ if os.path.isfile(gcpConf):
 #                 print("Error building VM #", i)
 #                 break
 #             else:
-#                 awsVMs.append(ans)
+#                 azureVMs.append(ans)
 
 #         except Exception as e:
 #             print("Found ", i - 1, " VMs")
@@ -72,23 +66,29 @@ if os.path.isfile(gcpConf):
 #     #Now check for a tenth VM since it's naming convention changes
 #     try:
 #         ans = azureBuildVMs(azureConfig['azure10'])
-#         awsVMs.append(ans)
+#         azureVMs.append(ans)
 #     except:
 #         pass
 
+# print("Azure VMs: ", azureVMs)
+
 # GCP
+print("\n\n---Now runing GCP---\n\n")
 
 #Set the project id
-print("Setting project id to ", PROJECT_ID)
+print("Running'gcloud config set project " + PROJECT_ID + "' to create a GCP project")
 os.system("gcloud config set project " + PROJECT_ID)
-print("Done")
 
+gcpVMs = []
 if gcpExists:
     #Now create the VMS
-    gcpVMs = []
-    for i in range(1, 10):
+    for i in range(1, 11):
         try:
-            confData = gcpConfig['gcp0' + str(i)]
+            if i < 10:
+                confData = gcpConfig['gcp0' + str(i)]
+            else:
+                confData = gcpConfig['gcp' + str(i)]
+
             ans = gcpBuildVMs(i, confData)
 
             if not ans:
@@ -101,17 +101,4 @@ if gcpExists:
             print("Found ", i - 1, " VMs")
             break
 
-    #Now check for a tenth VM since it's naming convention changes
-    try:
-        ans = gcpBuildVMs(azureConfig['azure10'])
-        gcpVMs.append(ans)
-    except:
-        pass
-
-
-
-
-# Azure
-# azureVMs = []
-# azureVMs.append(azureConfig['azure01'])
-# azureVMs.append(azureConfig['azure02'])
+print("GCP VMs: ", gcpVMs)

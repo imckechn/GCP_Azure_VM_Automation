@@ -14,7 +14,13 @@ def gcpBuildVMs(vmNum, config):
         data.append(config['purpose'])
         data.append(config['os'])
 
-        os.system("gcloud compute instances create " + name +
+        print("Running 'gcloud compute instances create " + name.lower() +
+                        " --image=" + image +
+                        " --image-project=" + imageProject +
+                        " --zone=" + zone +
+                        "' to create a GCP VM"
+        )
+        os.system("gcloud compute instances create " + name.lower() +
                         " --image=" + image +
                         " --image-project=" + imageProject +
                         " --zone=" + zone
