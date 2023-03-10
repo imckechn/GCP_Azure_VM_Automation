@@ -59,10 +59,10 @@ if azureExists:
                 confData = azureConfig['azure' + str(i)]
                 ans = azureBuildVMs(i, confData)
 
-            if not ans:
+            if ans == False:
                 print("Error building VM #", i)
                 break
-            else:
+            elif ans != None:
                 azureVMs.append(ans)
 
         except Exception as e:
@@ -96,10 +96,11 @@ if gcpExists:
 
             ans = gcpBuildVMs(i, confData)
 
-            if not ans:
+            if ans == False:
                 print("Error building VM #", i)
                 break
-            else:
+
+            elif ans != None:
                 gcpVMs.append(ans)
 
         except Exception as e:
@@ -124,9 +125,12 @@ for elem in gcpVMs:
 
 
 #Rename the .conf files
-os.rename('confFiles/azure.conf', 'confFiles/azure' + str(datetime.datetime.now()) + '.conf')
-os.rename('confFiles/gcp.conf', 'confFiles/gcp' + str(datetime.datetime.now()) + '.conf')
+if azureExists:
+    os.rename('confFiles/azure.conf', 'confFiles/azure' + str(datetime.datetime.now()) + '.conf')
+if gcpExists:
+    os.rename('confFiles/gcp.conf', 'confFiles/gcp' + str(datetime.datetime.now()) + '.conf')
 
+#Open the ports for Azure
 while True:
     ans = input("Do you want to open any ports for Azure(y/n)? ")
     if ans == 'y':
@@ -137,6 +141,7 @@ while True:
     else:
         print("Please enter 'y' or 'n'")
 
+#open the ports for GCP
 while True:
     ans = input("Do you want to open any ports for GCP(y/n)? ")
     if ans == 'y':

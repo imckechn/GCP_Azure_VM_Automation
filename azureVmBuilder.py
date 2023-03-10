@@ -1,6 +1,7 @@
 # Import the needed credential and management objects from the libraries.
 import datetime
 import subprocess
+import json
 import os
 
 keys = ['purpose', 'os', 'team']
@@ -20,13 +21,20 @@ azureKeyOptions = ["name", "n", "resource-group", "g", "availability-set", "boot
 
 def azureBuildVMs(vmNum, config):
     data = [vmNum]
+    VMname = config['name']
 
     azureElements = ""
     for key, value in config.items():
         if key not in keys and key in azureKeyOptions:
             azureElements += " --" + key + " " + value
 
-    print("\n")
+    currentVms = json.loads(subprocess.run("az vm list", capture_output=True, shell=True, text=True).stdout)
+
+    for vm in currentVms:
+        if vm['name'] == VMname:
+            print("Azure VM named ", VMname, " already exists.")
+            return None
+
     try:
         data.append(config['purpose'])
         data.append(config['os'])

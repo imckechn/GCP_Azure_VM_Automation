@@ -14,6 +14,13 @@ gcpKeyOptions = ["accelerator", "type", "boot-disk-device-name", "boot-disk-prov
 
 def gcpBuildVMs(vmNum, config):
     data = [vmNum]
+    vmName = config['name']
+
+    currentVMs = subprocess.run("gcloud compute instances list", capture_output=True, shell=True, text=True).stdout
+
+    if vmName in currentVMs:
+        print("GCP VM named ", vmName, " already exists")
+        return None
 
     gcpElements = ""
     for key, value in config.items():
