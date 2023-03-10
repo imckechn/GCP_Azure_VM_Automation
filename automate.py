@@ -1,4 +1,6 @@
 import configparser
+import datetime
+import json
 from azureVmBuilder import *
 from gcpVmBuilder import *
 
@@ -26,7 +28,7 @@ if os.path.isfile(gcpConf):
 # Azure
 print("---Now runing Azure---\n\n")
 
-# azureVMs = []
+azureVMs = []
 # if awsExists:
 #     #Get the resource grous
 #     # print("Running 'az group create --name images --location canadacentral' to create a resource group on Azure")
@@ -102,3 +104,15 @@ if gcpExists:
             break
 
 print("GCP VMs: ", gcpVMs)
+
+
+# Updating the VMcreation file
+print("\n\n---Creating/Updating the VMcreation file---\n\n")
+time = datetime.datetime.now()
+f = open("VMcreations/VMcreation_" + str(time) + ".txt", "w")
+
+f.write("Azure VMs:")
+f.write("VM #, Purpose, OS, Team")
+for elem in azureVMs:
+    f.write(json.stringify(elem[0]))
+

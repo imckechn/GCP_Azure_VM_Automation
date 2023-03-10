@@ -1,4 +1,7 @@
+import datetime
 import os
+import subprocess
+from subprocess import PIPE, run
 
 def gcpBuildVMs(vmNum, config):
     data = [vmNum]
@@ -20,14 +23,25 @@ def gcpBuildVMs(vmNum, config):
                         " --zone=" + zone +
                         "' to create a GCP VM"
         )
-        os.system("gcloud compute instances create " + name.lower() +
+        ans = subprocess.run("gcloud compute instances create " + name.lower() +
                         " --image=" + image +
                         " --image-project=" + imageProject +
-                        " --zone=" + zone
+                        " --zone=" + zone,
+                        capture_output=True, shell=True, text=True
         )
+
+        if 'stderr="ERROR' in str(ans):
+            print("GCP VM #", vmNum, " is bad")
+            return False
+        else:
+            print("Created GCP VM #", vmNum)
+
+        #Get the time the VM finished being created at
+        data.append(datetime.datetime.now())
 
         return data
 
     except Exception as e:
+        print(e)
         print("GCP VM #", vmNum, " is bad")
         return False
