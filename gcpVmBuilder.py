@@ -18,7 +18,10 @@ def gcpBuildVMs(vmNum, config):
     gcpElements = ""
     for key, value in config.items():
         if key not in keys and key in gcpKeyOptions:
-            gcpElements += " --" + key + " " + value
+            if key == 'name':
+                gcpElements += " --" + key + " " + value.lower()
+            else:
+                gcpElements += " --" + key + " " + value
 
     try:
         data.append(config['project'])
