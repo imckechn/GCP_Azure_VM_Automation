@@ -15,22 +15,22 @@ gcpConfig = configparser.ConfigParser()
 
 azureConf = "confFiles/azure.conf"
 gcpConf = "confFiles/gcp.conf"
-awsExists = False
+azureExists = False
 gcpExists = False
 
 if os.path.isfile(azureConf):
-    awsExists = False
+    azureExists = True
     azureConfig.read(azureConf)
 
 if os.path.isfile(gcpConf):
-    gcpExists = False
+    gcpExists = True
     gcpConfig.read(gcpConf)
 
 # Azure
 print("---Creating the Azure VMs---\n")
 
 azureVMs = []
-if awsExists:
+if azureExists:
 
     #Get the resource grous
     resourceGroups = []
@@ -124,13 +124,25 @@ for elem in gcpVMs:
 
 
 #Rename the .conf files
-# os.rename('confFiles/azure.conf', 'confFiles/azure' + str(datetime.datetime.now()) + '.conf')
-# os.rename('confFiles/gcp.conf', 'confFiles/gcp' + str(datetime.datetime.now()) + '.conf')
+os.rename('confFiles/azure.conf', 'confFiles/azure' + str(datetime.datetime.now()) + '.conf')
+os.rename('confFiles/gcp.conf', 'confFiles/gcp' + str(datetime.datetime.now()) + '.conf')
 
-ans = input("Do you want to open any ports for Azure(y/n)? ")
-if ans == 'y':
-    azureOpenPorts()
+while True:
+    ans = input("Do you want to open any ports for Azure(y/n)? ")
+    if ans == 'y':
+        azureOpenPorts()
+        break
+    elif ans == 'n':
+        break
+    else:
+        print("Please enter 'y' or 'n'")
 
-# ans = input("Do you want to open any ports for GCP(y/n)? ")
-# if ans == 'y':
-#     gcpOpenPorts()
+while True:
+    ans = input("Do you want to open any ports for GCP(y/n)? ")
+    if ans == 'y':
+        gcpOpenPorts()
+        break
+    elif ans == 'n':
+        break
+    else:
+        print("Please enter 'y' or 'n'")

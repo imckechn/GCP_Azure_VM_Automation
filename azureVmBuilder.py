@@ -61,7 +61,6 @@ def azureOpenPorts():
     print("You're current resource groups:")
     os.system("az group list -otable")
 
-
     resourceGroup = input("Enter the resource group you want to open the port in ")
     vmName = input("For which VM do you want to open the port ")
 
@@ -69,4 +68,8 @@ def azureOpenPorts():
     print("Running '" + "az vm open-port --port " + str(portNum)  + " --resource-group " + str(resourceGroup) + "' to open the port")
     ans = subprocess.run("az vm open-port --port " + str(portNum) + " --resource-group " + str(resourceGroup) + " --name " + str(vmName), capture_output=True, shell=True, text=True)
 
-    print("ans", ans)
+    if ans.stderr == "":
+        print("Port", portNum, "is open")
+    else:
+        print("Port", portNum, "is not open")
+        print("Error: ", ans.stderr)

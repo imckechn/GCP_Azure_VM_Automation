@@ -54,3 +54,21 @@ def gcpBuildVMs(vmNum, config):
         print(e)
         print("GCP VM #", vmNum, " is bad")
         return False
+
+
+def gcpOpenPorts():
+    portNum = 0
+    while(True):
+        requestedPort = input("Enter the port number you want to open ")
+        if requestedPort.isdigit():
+            portNum = int(requestedPort)
+            break
+
+    print("Running 'gcloud compute firewall-rules create allow-port-" + str(portNum) + " --allow tcp:" + str(portNum))
+    ans = subprocess.run("gcloud compute firewall-rules create allow-port-" + str(portNum) + " --allow tcp:" + str(portNum), capture_output=True, shell=True, text=True)
+
+    if "Created" in ans.stderr:
+        print("Successfully opened port " + str(portNum))
+    else:
+        print("Error opening port " + str(portNum))
+        print("Error: ", ans.stderr)
