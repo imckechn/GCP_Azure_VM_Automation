@@ -7,9 +7,6 @@ def gcpBuildVMs(vmNum, config):
         name = config['name']
         image = config['image']
         imageProject = config['imageproject']
-
-        if imageProject == 'debian-cloud':
-            imageProject = 'debian'
         zone = config['zone']
 
         data.append(config['project'])
@@ -17,27 +14,10 @@ def gcpBuildVMs(vmNum, config):
         data.append(config['purpose'])
         data.append(config['os'])
 
-        print("Name: ", name)
-        print("Image: ", image)
-        print("Image Project: ", imageProject)
-        print("Zone: ", zone)
-        print("\n\n")
-
-        print("Running it")
-        # print(
-        #     "gcloud compute instances create " + name +
-        #     " --image=" + image +
-        #     " --image-project=" + imageProject +
-        #     " --zone=" + zone +
-        #     " --machine-type=e2-medium" +
-        #     " --boot-disk-size=10"
-        # )
         os.system("gcloud compute instances create " + name +
                         " --image=" + image +
                         " --image-project=" + imageProject +
-                        " --zone=" + zone +
-                        " --machine-type=e2-medium" +
-                        " --boot-disk-size=10"
+                        " --zone=" + zone
         )
 
         return data
@@ -45,11 +25,3 @@ def gcpBuildVMs(vmNum, config):
     except Exception as e:
         print("GCP VM #", vmNum, " is bad")
         return False
-
-# gcloud compute instances create linuxserver01 
-# --image=debian-10-buster-v20210916 
-# --image-project=debian-cloud 
-# --zone=northamerica-northeast2-a 
-# --machine-type=e2-medium 
-# --boot-disk-size=10 
-
