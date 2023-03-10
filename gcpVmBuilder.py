@@ -17,11 +17,14 @@ def gcpBuildVMs(vmNum, config):
 
     gcpElements = ""
     for key, value in config.items():
+        if key == "imageproject":
+            key = "image-project"
+
         if key not in keys and key in gcpKeyOptions:
             if key == 'name':
-                gcpElements += " --" + key + " " + value.lower()
+                gcpElements += value.lower()
             else:
-                gcpElements += " --" + key + " " + value
+                gcpElements += " --" + key + "=" + value
 
     try:
         data.append(config['project'])
@@ -29,13 +32,17 @@ def gcpBuildVMs(vmNum, config):
         data.append(config['purpose'])
         data.append(config['os'])
 
-        print("Running 'gcloud compute instances create" + gcpElements)
-        ans = subprocess.run("Running 'gcloud compute instances create" + gcpElements, capture_output=True, shell=True, text=True)
+        print("Running 'gcloud compute instances create " + gcpElements)
+        ans = subprocess.run("gcloud compute instances create " + gcpElements, capture_output=True, shell=True, text=True)
 
         if 'stderr="ERROR' in str(ans):
             print("GCP VM #", vmNum, " is bad")
             return False
         else:
+            data.append(ans.args)
+            data.append(ans.returncode)
+            data.append(ans.stdout)
+            data.append(ans.stderr)
             print("Created GCP VM #", vmNum)
 
         #Get the time the VM finished being created at

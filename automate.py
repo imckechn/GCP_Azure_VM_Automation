@@ -116,7 +116,6 @@ for elem in azureVMs:
 f.write("GCP VMs:\n")
 f.write("VM #, Purpose, OS, Team\n")
 for elem in gcpVMs:
-    print("elem: ", elem)
     f.write(json.dumps(elem) + "\n")
 
 

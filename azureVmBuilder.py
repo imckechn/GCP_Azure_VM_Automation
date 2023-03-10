@@ -31,7 +31,6 @@ def azureBuildVMs(vmNum, config):
         data.append(config['os'])
         data.append(config['team'])
 
-
         print("Running 'az vm create" + azureElements + "' to create an Azure VM")
         ans = subprocess.run("az vm create" + azureElements, capture_output=True, shell=True, text=True)
 
