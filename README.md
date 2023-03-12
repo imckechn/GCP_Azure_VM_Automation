@@ -17,3 +17,12 @@ This program automates the creation of VMs for Azure and Google Cloud. It reads 
 4. ``gcloud auth login``
 5. ``az login``
 5. ``pip3 automate.py``
+
+## Repo Structure
+Directory confFiles contains the gcp and azure conf files.
+
+VMcreations creates the text output of the VMs created.
+
+Automate.py runs the main program
+azureVmBuilder.py creates the VMs for Azure
+gcpVmBuilder.py creates the VMs for Google Cloud

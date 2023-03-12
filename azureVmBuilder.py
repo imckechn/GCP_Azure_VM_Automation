@@ -28,6 +28,7 @@ def azureBuildVMs(vmNum, config):
         if key not in keys and key in azureKeyOptions:
             azureElements += " --" + key + " " + value
 
+    print("Running 'az vm list' to check if Azure VM named ", VMname, " already exists.")
     currentVms = json.loads(subprocess.run("az vm list", capture_output=True, shell=True, text=True).stdout)
 
     for vm in currentVms:
@@ -51,6 +52,7 @@ def azureBuildVMs(vmNum, config):
 
         #Get the time the VM finished being created at
         data.append(str(datetime.datetime.now()))
+        data.append(ans.stdout)
 
         return data
 

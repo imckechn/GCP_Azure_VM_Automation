@@ -54,6 +54,7 @@ def gcpBuildVMs(vmNum, config):
 
         #Get the time the VM finished being created at
         data.append(str(datetime.datetime.now()))
+        data.append(str(datetime.datetime.now()))
 
         return data
 

@@ -33,6 +33,7 @@ azureVMs = []
 if azureExists:
 
     #Get the resource grous
+    print("Creating the resource groups")
     resourceGroups = []
     for i in range(1, 11):
         try:
@@ -49,6 +50,7 @@ if azureExists:
         except Exception as e:
             break
 
+    print("\nNow creating the VMs")
     #Now create the VMS
     for i in range(1, 11):
         try:
@@ -114,21 +116,21 @@ time = datetime.datetime.now()
 f = open("VMcreations/VMcreation_" + str(time) + ".txt", "w")
 
 f.write("Azure VMs:\n")
-f.write("VM #, Purpose, OS, Team\n")
+f.write("VM #, Purpose, OS, Team, Time Created, Output From The VM\n")
 for elem in azureVMs:
     f.write(json.dumps(elem) + "\n")
 
 f.write("GCP VMs:\n")
-f.write("VM #, Purpose, OS, Team\n")
+f.write("VM #, Purpose, OS, Team, Time Created, Output From The VM\n")
 for elem in gcpVMs:
     f.write(json.dumps(elem) + "\n")
 
 
 #Rename the .conf files
-if azureExists:
-    os.rename('confFiles/azure.conf', 'confFiles/azure' + str(datetime.datetime.now()) + '.conf')
-if gcpExists:
-    os.rename('confFiles/gcp.conf', 'confFiles/gcp' + str(datetime.datetime.now()) + '.conf')
+# if azureExists:
+#     os.rename('confFiles/azure.conf', 'confFiles/azure' + str(datetime.datetime.now()) + '.conf')
+# if gcpExists:
+#     os.rename('confFiles/gcp.conf', 'confFiles/gcp' + str(datetime.datetime.now()) + '.conf')
 
 #Open the ports for Azure
 while True:
