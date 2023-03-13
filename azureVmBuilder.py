@@ -19,15 +19,18 @@ azureKeyOptions = ["name", "n", "resource-group", "g", "availability-set", "boot
         "os-disk-encryption-set", "os-disk-name", "os-disk-size-gb", "os-type", "specialized", "storage-account", "storage-container-name",
         "storage-sku", "ultra-ssd-enabled", "use-unmanaged-disk"]
 
+# Handles building the azure VMs
 def azureBuildVMs(vmNum, config):
     data = [vmNum]
     VMname = config['name']
 
+    #Makes a string of all the azure VM configurations
     azureElements = ""
     for key, value in config.items():
         if key not in keys and key in azureKeyOptions:
             azureElements += " --" + key + " " + value
 
+    #Get a string containing all the current VM names
     print("Running 'az vm list' to check if Azure VM named ", VMname, " already exists.")
     currentVms = json.loads(subprocess.run("az vm list", capture_output=True, shell=True, text=True).stdout)
 
@@ -41,11 +44,14 @@ def azureBuildVMs(vmNum, config):
         data.append(config['os'])
         data.append(config['team'])
 
+        #Create the VM
         print("Running 'az vm create" + azureElements + "' to create an Azure VM")
         ans = subprocess.run("az vm create" + azureElements, capture_output=True, shell=True, text=True)
 
-        if 'stderr="ERROR' in str(ans):
+        #Check if the VM was created successfully
+        if "stderr='ERROR" in str(ans):
             print("Azure VM #", vmNum, " is bad")
+            print("Error: ", ans.stderr)
             return False
         else:
             print("Created Azure VM #", vmNum)

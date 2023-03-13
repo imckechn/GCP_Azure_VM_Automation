@@ -12,17 +12,22 @@ gcpKeyOptions = ["accelerator", "type", "boot-disk-device-name", "boot-disk-prov
         "source-snapshot", "node", "node-affinity-file", "node-group", "public-ptr-domain", "reservation", "reservation-affinity", "default",
         "scopes", "service-account"]
 
+#Function to automate the building of the GCP VMs
 def gcpBuildVMs(vmNum, config):
     data = [vmNum]
     vmName = config['name']
 
+    #Gets a string of all the current VMs
     currentVMs = subprocess.run("gcloud compute instances list", capture_output=True, shell=True, text=True).stdout
 
+    #Checks if the current vm already exists
     if vmName in currentVMs:
         print("GCP VM named ", vmName, " already exists")
         return None
 
     gcpElements = ""
+
+    #Creates a string of all the VM configurations
     for key, value in config.items():
         if key == "imageproject":
             key = "image-project"
@@ -39,11 +44,14 @@ def gcpBuildVMs(vmNum, config):
         data.append(config['purpose'])
         data.append(config['os'])
 
+        #Create the VM
         print("Running 'gcloud compute instances create " + gcpElements)
         ans = subprocess.run("gcloud compute instances create " + gcpElements, capture_output=True, shell=True, text=True)
 
-        if 'stderr="ERROR' in str(ans):
-            print("GCP VM #", vmNum, " is bad")
+        #Check if the VM was created successfully
+        if 'RUNNING' not in str(ans):
+            print("GCP VM #", vmNum, " failed")
+            print("Error: ", ans.stderr)
             return False
         else:
             data.append(ans.args)
@@ -56,6 +64,7 @@ def gcpBuildVMs(vmNum, config):
         data.append(str(datetime.datetime.now()))
         data.append(str(datetime.datetime.now()))
 
+        #Return the data which contains all the details about the VM
         return data
 
     except Exception as e:
@@ -63,7 +72,7 @@ def gcpBuildVMs(vmNum, config):
         print("GCP VM #", vmNum, " is bad")
         return False
 
-
+#This function handles  opening the ports on the GCP VMs
 def gcpOpenPorts():
     portNum = 0
     while(True):
