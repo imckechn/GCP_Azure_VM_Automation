@@ -54,15 +54,11 @@ def gcpBuildVMs(vmNum, config):
             print("Error: ", ans.stderr)
             return False
         else:
-            data.append(ans.args)
-            data.append(ans.returncode)
-            data.append(ans.stdout)
-            data.append(ans.stderr)
             print("Created GCP VM #", vmNum)
 
         #Get the time the VM finished being created at
         data.append(str(datetime.datetime.now()))
-        data.append(str(datetime.datetime.now()))
+        data.append(ans.stdout)
 
         #Return the data which contains all the details about the VM
         return data
