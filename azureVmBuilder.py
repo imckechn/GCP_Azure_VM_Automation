@@ -49,10 +49,9 @@ def azureBuildVMs(vmNum, config):
         ans = subprocess.run("az vm create" + azureElements, capture_output=True, shell=True, text=True)
 
         #Check if the VM was created successfully
-        if "stderr='ERROR" in str(ans):
+        if "stderr='ERROR" in str(ans) or "stderr='WARNING":
             print("Azure VM #", vmNum, " is bad")
-            print("Error: ", ans.stderr)
-            return False
+            print("Error/Warning: ", ans.stderr)
         else:
             print("Created Azure VM #", vmNum)
 

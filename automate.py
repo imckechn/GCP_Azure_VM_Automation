@@ -127,10 +127,10 @@ for elem in gcpVMs:
 
 
 #Rename the .conf files
-# if azureExists:
-#     os.rename('confFiles/azure.conf', 'confFiles/azure' + str(datetime.datetime.now()) + '.conf')
-# if gcpExists:
-#     os.rename('confFiles/gcp.conf', 'confFiles/gcp' + str(datetime.datetime.now()) + '.conf')
+if azureExists:
+    os.rename('confFiles/azure.conf', 'confFiles/azure' + str(datetime.datetime.now()) + '.conf')
+if gcpExists:
+    os.rename('confFiles/gcp.conf', 'confFiles/gcp' + str(datetime.datetime.now()) + '.conf')
 
 #Open the ports for Azure
 while True:
